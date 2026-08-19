@@ -1,5 +1,5 @@
-import type { AgentModel } from "../../vendor/plugin-sdk/mod.ts";
-import { tryEachCandidate } from "../services/command.ts";
+import type { AgentModel } from "@ora-space/plugin-sdk/agent";
+import { tryOpenCode } from "./command.ts";
 
 /** Reads the raw model id list from OpenCode; injectable so the cache can be exercised. */
 export type ModelIdSource = () => Promise<string[]>;
@@ -64,9 +64,9 @@ function displayNameFor(id: string): string {
 
 /** Runs `opencode models` and returns the non-empty id lines it prints. */
 async function runOpenCodeModels(): Promise<string[]> {
-  const output = await tryEachCandidate(async ({ command, extraArgs }) => {
+  const output = await tryOpenCode(async (command) => {
     const { code, stdout } = await new Deno.Command(command, {
-      args: [...extraArgs, "models"],
+      args: ["models"],
       stdin: "null",
       stdout: "piped",
       stderr: "piped",
